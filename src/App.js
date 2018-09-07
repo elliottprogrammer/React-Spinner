@@ -1,16 +1,67 @@
 import React, { Component } from 'react';
+import Header from './components/header/header';
+import Main from './components/main/main';
+import Footer from './components/footer/footer';
 
 class App extends Component {
-  render() {
-    return (
-      <div id="wrapper">
-          <header id="header">
-              <div id="spinner"><svg id="header-spinner" width="32px" height="32px" viewBox="0 0 128 128"><rect x="0" y="0" width="100%" height="100%" fill="transparent" /><g><path  fill="#0f75bc" fill-opacity="1" d="M109.25 55.5h-36l12-12a29.54 29.54 0 0 0-49.53 12H18.75A46.04 46.04 0 0 1 96.9 31.84l12.35-12.34v36zm-90.5 17h36l-12 12a29.54 29.54 0 0 0 49.53-12h16.97A46.04 46.04 0 0 1 31.1 96.16L18.74 108.5v-36z"/></g></svg></div>
-              <h1 id="main-title">Spin Viewer</h1>
-          </header>
-      </div>
-    );
-  }
+    constructor() {
+        super();
+        
+        this.state = {
+            arrowsRotated: false,
+            outputText: "",
+            textareaText: ""
+        };
+    }
+
+    preg_quote(str, delimiter) {
+        return (str + '').replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
+    }
+    
+    spin(text) {
+        var matches = text.match(/{[^<]+/gi);
+        if (matches === null) {
+            return text;
+        }
+        if (matches[0].indexOf('{') !== -1) {
+            matches[0] = matches[0].substr(matches[0].indexOf('{') + 1);
+        }
+        if (matches[0].indexOf('}') !== -1) {
+            matches[0] = matches[0].substr(0, matches[0].indexOf('}'));
+        }
+        var parts = matches[0].split('|');
+        var t = this.preg_quote(matches[0]);
+        const e_v = new RegExp('{' + t + '}', 'g');
+        text = text.replace(e_v, parts[Math.floor(Math.random()*parts.length)]);
+        return this.spin(text);
+    }
+
+    onFormSubmit(e) {
+        e.preventDefault();
+        const classVal = !this.state.arrowsRotated;
+        const submittedText = e.target.textbox.value;
+        const spunText = this.spin(submittedText);
+        this.setState({
+            arrowsRotated: classVal,
+            textareaText: submittedText,
+            outputText: spunText
+        })
+    }
+
+    render() {
+        return (
+            <div id="wrapper">
+                <Header arrowsRotated={this.state.arrowsRotated}/>
+                <Main 
+                    formSubmitted={this.onFormSubmit.bind(this)}
+                    arrowsRotated={this.state.arrowsRotated}
+                    textareaText={this.state.textareaText}
+                    outputText={this.state.outputText}
+                />
+                <Footer />
+            </div>
+        );
+    }
 }
 
 export default App;
