@@ -1,21 +1,20 @@
-function preg_quote(str, delimiter) {
-    return (str + '').replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
-}
+//Spinner function
 
-function spin(text) {
-    var matches = text.match(/{[^<]+/gi);
-    if (matches === null) {
-        return text;
-    }
-    if (matches[0].indexOf('{') != -1) {
-        matches[0] = matches[0].substr(matches[0].indexOf('{') + 1);
-    }
-    if (matches[0].indexOf('}') != -1) {
-        matches[0] = matches[0].substr(0, matches[0].indexOf('}'));
-    }
-    var parts = matches[0].split('|');
-    var t = preg_quote(matches[0]);
-    e_v = new RegExp('{' + t + '}', 'g');
-    text = text.replace(e_v, parts[Math.floor(Math.random()*parts.length)]);
+const spin = (text) => {
+    // match spintax ( {wordexample1|wordexample2|wordexample3} )
+    var spintaxMatch = text.match(/(?<=\{)[^}]+(?=\})/);
+    // if no more matches, we're all done! return text.
+    if (spintaxMatch === null) { return text; }
+    // get the words in the spintax
+    var words = spintaxMatch[0].split('|');
+    // prep the string for use as a regular expression (escape all regex chars)
+    var escapedMatch = spintaxMatch[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // make regex to match the full spintax for replacement
+    const thisSpintax = new RegExp('{' + escapedMatch + '}', 'g');
+    // replce the spintax with the randomly chosen word
+    text = text.replace(thisSpintax, words[Math.floor(Math.random()*words.length)]);
+    // recursive call
     return spin(text);
 }
+
+export default spin;

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Header from './components/header/header';
 import Main from './components/main/main';
 import Footer from './components/footer/footer';
+import spin from './spinner';
 
 class App extends Component {
     constructor() {
@@ -14,33 +15,11 @@ class App extends Component {
         };
     }
 
-    preg_quote(str, delimiter) {
-        return (str + '').replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
-    }
-    
-    spin(text) {
-        var matches = text.match(/{[^<]+/gi);
-        if (matches === null) {
-            return text;
-        }
-        if (matches[0].indexOf('{') !== -1) {
-            matches[0] = matches[0].substr(matches[0].indexOf('{') + 1);
-        }
-        if (matches[0].indexOf('}') !== -1) {
-            matches[0] = matches[0].substr(0, matches[0].indexOf('}'));
-        }
-        var parts = matches[0].split('|');
-        var t = this.preg_quote(matches[0]);
-        const e_v = new RegExp('{' + t + '}', 'g');
-        text = text.replace(e_v, parts[Math.floor(Math.random()*parts.length)]);
-        return this.spin(text);
-    }
-
     onFormSubmit(e) {
         e.preventDefault();
         const classVal = !this.state.arrowsRotated;
         const submittedText = e.target.textbox.value;
-        const spunText = this.spin(submittedText);
+        const spunText = spin(submittedText);
         this.setState({
             arrowsRotated: classVal,
             textareaText: submittedText,
