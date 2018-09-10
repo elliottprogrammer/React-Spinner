@@ -5,15 +5,11 @@ import Footer from './components/footer/footer';
 import spin from './spinner';
 
 class App extends Component {
-    constructor() {
-        super();
-        
-        this.state = {
-            arrowsRotated: false,
-            outputText: "",
-            textareaText: ""
-        };
-    }
+    state = {
+        arrowsRotated: false,
+        outputText: "",
+        textareaText: ""
+    };
 
     onFormSubmit(e) {
         e.preventDefault();

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import TopText from './topText';
 import Form from './form';
 import Output from './output';
@@ -19,6 +20,13 @@ const Main = (props) => {
             </div>
         </div>
      );
+}
+
+Main.propTypes = {
+    arrowsRotated: PropTypes.bool,
+    formSubmitted: PropTypes.func,
+    textareaText: PropTypes.string,
+    outputText: PropTypes.string
 }
  
 export default Main;
