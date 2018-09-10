@@ -1,4 +1,8 @@
-//Spinner function
+// javascript Spinner function
+//
+// https://github.com/elliottprogrammer/React-Spinner/blob/dev1/src/spinner.js
+// Author: elliottprogrammer - https://github.com/elliottprogrammer
+
 
 const spin = (text) => {
     // match spintax ( {wordexample1|wordexample2|wordexample3} )
